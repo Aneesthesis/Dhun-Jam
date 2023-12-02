@@ -22,8 +22,6 @@ const reducer = (state, action) => {
 function DashboardScreen(data) {
   const navigate = useNavigate();
 
-  console.log(data);
-
   const {
     amount = {},
     charge_customers = false,
@@ -44,7 +42,6 @@ function DashboardScreen(data) {
       category10: amount["category_10"] || 0,
     });
 
-  console.log(amount.category_6 > 99);
   const { state, dispatch: ctxDispatch } = useContext(Store);
 
   useEffect(() => {
