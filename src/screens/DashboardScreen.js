@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { Store } from "../Store";
 import { useNavigate } from "react-router-dom";
 import BarChart from "../UI/BarChart";
+import axios from "axios";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -19,7 +20,7 @@ const reducer = (state, action) => {
   }
 };
 
-function DashboardScreen(data) {
+function DashboardScreen({ data, onSave }) {
   const navigate = useNavigate();
 
   const {
@@ -28,7 +29,7 @@ function DashboardScreen(data) {
     name = "",
     location = "",
     id = "",
-  } = data.data || {};
+  } = data || {};
   const [chargeCustomers, setChargeCustomers] = useState(charge_customers);
   const [customSongRequestAmount, setCustomSongRequestAmount] = useState(
     amount["category_6"] || 0
@@ -45,10 +46,10 @@ function DashboardScreen(data) {
   const { state, dispatch: ctxDispatch } = useContext(Store);
 
   useEffect(() => {
-    const { amount = {}, charge_customers = false } = data.data || {};
+    const { amount = {}, charge_customers = false } = data || {};
     setChargeCustomers(charge_customers);
     setCustomSongRequestAmount(amount["category_6"] || 0);
-  }, [data.data]);
+  }, [data]);
 
   const minValueCat6 = 99;
   const minValueCat7 = 79;
@@ -74,6 +75,7 @@ function DashboardScreen(data) {
       setChargeCustomers(value);
     }
   }
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-black">
       <Helmet>
@@ -191,6 +193,15 @@ function DashboardScreen(data) {
           {chargeCustomers && <BarChart data={categoryData} />}
         </section>
         <button
+          onClick={() =>
+            onSave({
+              category_6: customSongRequestAmount,
+              category_7: category7,
+              category_8: category8,
+              category_9: category9,
+              category_10: category10,
+            })
+          }
           className={`w-full text-white px-4 py-2 rounded-md focus:border-[#F0C3F1] focus:border-[1px] active:border-[#F0C3F1] active:border-[1px] hover:border-[#F0C3F1] hover:border-[1px] ${
             customSongRequestAmount < 99 ||
             !chargeCustomers ||
